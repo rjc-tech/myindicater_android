@@ -5,4 +5,8 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="jp.co.rjc.myindicater_android.MapsActivity" />
+    tools:context="jp.co.rjc.myindicater_android.MapsActivity"
+    map:cameraTargetLat="35.642558"
+    map:cameraTargetLng="139.71377"
+    map:cameraZoom="15.0"
+    />
