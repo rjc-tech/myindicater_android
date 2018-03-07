@@ -26,13 +26,13 @@ class MapsActivity() : FragmentActivity(), OnMapReadyCallback, Parcelable {
         mapFragment.getMapAsync(this)
     }
 
-    fun onMapReady(googleMap: GoogleMap) {
+    override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
         // Add a marker in Sydney, Australia, and move the camera.
-        val sydney = LatLng(-34, 151)
-        mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+//        val sydney = LatLng(-34, 151)
+//        mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+//        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
