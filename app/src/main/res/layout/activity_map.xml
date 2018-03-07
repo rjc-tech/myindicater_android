@@ -6,10 +6,20 @@
     android:layout_height="match_parent"
     tools:context="jp.co.rjc.myindicater_android.MapActivity">
 
-    <TextView
-        android:id="@+id/text"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <Button
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:text="現在地"
+        tools:layout_editor_absoluteX="280dp"
+        tools:layout_editor_absoluteY="393dp"
+        tools:ignore="MissingConstraints" />
 
 </android.support.constraint.ConstraintLayout>
