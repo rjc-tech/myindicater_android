@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/myindicater_android.iml" filepath="$PROJECT_DIR$/myindicater_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/myindicater.iml" filepath="$PROJECT_DIR$/myindicater.iml" />
+      <module fileurl="file://C:\GroupActivity\2G\git\myindicater\myindicater_android.iml" filepath="C:\GroupActivity\2G\git\myindicater\myindicater_android.iml" />
     </modules>
   </component>
 </project>
