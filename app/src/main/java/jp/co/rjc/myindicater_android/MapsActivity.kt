@@ -9,6 +9,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.CameraUpdate
+
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -36,9 +39,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
+        val sydney = LatLng(35.709026, 139.731992)
         // マーカーに表示するメイン情報と補足情報追加し、マップに表示
-        mMap.addMarker(MarkerOptions().position(sydney).title("マーカーメイン").snippet("★補足情報★")).showInfoWindow()
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.addMarker(MarkerOptions().position(sydney).title("テストメイン").snippet("☆彡補足情報☆彡")).showInfoWindow()
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+        val cUpdate = CameraUpdateFactory.newLatLngZoom(sydney, 15f)
+        mMap.moveCamera(cUpdate)
+
     }
 }
