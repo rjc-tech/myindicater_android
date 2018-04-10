@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -21,10 +22,7 @@
         android:layout_height="511dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        map:layout_constraintBottom_toBottomOf="parent"
-        map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintHorizontal_bias="0.461"
-        map:layout_constraintStart_toStartOf="parent"
         tools:context="jp.co.rjc.myindicater_android.MapActivity" />
 
     <Button
@@ -34,9 +32,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="現在地"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.414"
-        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteY="399dp" />
 
@@ -48,9 +44,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="目的地を入力"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="目的地を入力" />
 
     <Button
         android:id="@+id/button3"
@@ -61,9 +55,6 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:text="検索"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editText"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/editText" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
