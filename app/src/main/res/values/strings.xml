@@ -2,4 +2,7 @@
     <string name="app_name">myindicater_android</string>
     <string name="destination_input_form">destination_input_form</string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">地図画面</string>
 </resources>

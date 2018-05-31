@@ -24,11 +24,13 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
+        /* カスタマイズしたツールバーを作成 */
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "TEST"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        /* ボタンを設定 */
         button1 = findViewById(R.id.goal_button)
         button1?.setOnClickListener(this)
         button2 = findViewById(R.id.about_button)
@@ -36,25 +38,44 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    /* テスト用トースト */
     object ToastView {
         fun showToast(context: Context, message: String) {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }
 
+    /* テスト用Fragment作成 */
+    private fun replaceFragment() {
+        val transaction = supportFragmentManager.beginTransaction()
+        val mainFragment = mapFragment()
+        transaction.replace(R.id.frameID, mainFragment)
+        transaction.commit()
+    }
+
     override fun onClick(v: View?) {
+
+        /* 地図Flagment作成 */
+        val fragmentManager = getFragmentManager()
+
         when (v?.id) {
+            /* 目的地ボタン */
             R.id.goal_button -> {
                 ToastView.showToast(this, "goal_button")
             }
+
+            /* about遷移ボタン */
             R.id.about_button -> {
                 ToastView.showToast(this, "about")
             }
+            /* ボタン以外テスト用 */
             else -> {
                 ToastView.showToast(this, "else")
             }
         }
     }
+
+    /* 戻る矢印（←）追加 */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
