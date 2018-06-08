@@ -21,4 +21,10 @@
     string in this file.
     -->
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBisg850iHlVD2SnEEqRC0zQDzWEV4j6L0</string>
+
+    <!--TODO 要プレイス検索APIキー作成 -->
+    <!--TODO https://developers.google.com/places/web-service/search?hl=ja -->
+    <string name="google_maps_place_search_key">TEST</string>
+
+
 </resources>
