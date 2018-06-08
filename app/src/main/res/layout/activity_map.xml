@@ -5,25 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="jp.co.rjc.myindicater_android.MapActivity">
 
-    <!--<com.google.android.gms.maps.MapView-->
-    <!--android:id="@+id/map"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--tools:ignore="MissingConstraints" />-->
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="381dp"
-        android:layout_height="511dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        map:layout_constraintHorizontal_bias="0.461"
-        tools:context="jp.co.rjc.myindicater_android.MapActivity" />
 
     <Button
         android:id="@+id/button2"
@@ -36,25 +20,69 @@
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteY="399dp" />
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="295dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="目的地を入力" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="83dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="295dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="目的地を入力" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="83dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:text="検索"
+            app:layout_constraintStart_toEndOf="@+id/editText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="2点間の距離:"
+            android:textSize="18dp"/>
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textSize="18dp"/>
+
+
+    </LinearLayout>
+
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:text="検索"
-        app:layout_constraintStart_toEndOf="@+id/editText" />
+        android:layout_marginStart="8dp"
+        map:layout_constraintHorizontal_bias="0.461"
+        tools:context="jp.co.rjc.myindicater_android.MapActivity" />
+
 
 </LinearLayout>
