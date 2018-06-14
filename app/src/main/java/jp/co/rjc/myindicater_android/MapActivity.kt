@@ -27,7 +27,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
 
     val REQUEST_CODE = 1
 
+    // 目的地のPlace
     private var mDestination : Place? = null
+
+    // 現在地のPlace
+    private var mHere : Place? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,14 +52,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
                 searchTask.setOnSearchDestinationTaskListener(this)
                 searchTask.execute(word)
 
-                // TODO
-//                val mGoogleApiClient = GoogleApiClient.Builder(this)
-//                        .addApi(Places.GEO_DATA_API)
-//                        .addApi(Places.PLACE_DETECTION_API)
-//                        .enableAutoManage(this, GoogleApiClient.OnConnectionFailedListener {
-//                        } )
-//                        .build()
-//                mGoogleApiClient.connect()
             }
         })
 
@@ -107,9 +103,31 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
         if(resultCode == Activity.RESULT_OK){
             clearAllMarker()
             mDestination = data!!.getParcelableExtra("place")
-            mDestination?.let { addMarker(it) }
-            mDestination?.let { moveMapToPlace(it) }
+            updateMap()
+            mDestination?.let {
+                moveMapToPlace(it)
+            }
         }
+    }
+
+    private fun updateMap(){
+        clearAllMarker()
+        mHere?.let {
+            addMarker(it)
+        }
+
+        mDestination?.let {
+            addMarker(it)
+        }
+
+        // 現在地と目的地がそろっている場合は線で結ぶ
+        if(mHere != null && mDestination != null){
+            drawPolyline(LatLng(mHere!!.latitude, mHere!!.longitude),
+                    LatLng(mDestination!!.latitude, mDestination!!.longitude))
+
+
+        }
+
     }
 
     override fun onSuccess(list: ArrayList<Place>) {
