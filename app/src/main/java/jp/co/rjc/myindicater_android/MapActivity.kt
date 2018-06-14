@@ -48,7 +48,7 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             /* 目的地ボタン */
             R.id.goal_button -> {
-                ToastView.showToast(this, "goal_button")
+                ToastView.showToast(this, "目的地ボタン")
                 val manager = supportFragmentManager
                 val mapFragment = mapFragment()
                 manager.beginTransaction().replace(R.id.container, mapFragment).commit()
@@ -56,10 +56,10 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
 
             /* about遷移ボタン */
             R.id.about_button -> {
-                ToastView.showToast(this, "about")
+                ToastView.showToast(this, "aboutボタン")
                 val manager = supportFragmentManager
-                val oneFragment = oneFragment()
-                manager.beginTransaction().replace(R.id.container, oneFragment).commit()
+                val aboutFragment = aboutFragment()
+                manager.beginTransaction().replace(R.id.container, aboutFragment).commit()
             }
             /* ボタン以外テスト用 */
             else -> {

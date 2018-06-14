@@ -4,6 +4,6 @@
     <string name="title_activity_maps">Map</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="map_fragment">地図画面</string>
-    <string name="form_fragment">目的地入力フォーム</string>
+    <string name="map_fragment">目的地入力フォーム</string>
+    <string name="about_fragment">About</string>
 </resources>

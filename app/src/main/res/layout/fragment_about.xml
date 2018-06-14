@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:id="@+id/frgment_one">
+    android:id="@+id/frgment_about">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginBottom="8dp"
         android:gravity="left|bottom"
-        android:text="@string/form_fragment" />
+        android:text="@string/about_fragment" />
 
 </android.support.constraint.ConstraintLayout>

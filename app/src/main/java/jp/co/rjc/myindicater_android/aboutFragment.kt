@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.Toast
 
-class oneFragment : Fragment(), View.OnClickListener {
+class aboutFragment : Fragment(), View.OnClickListener {
 
     private var view1: View? = null
 
@@ -42,7 +42,7 @@ class oneFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        view1 = inflater!!.inflate(R.layout.fragment_one, container, false)
+        view1 = inflater!!.inflate(R.layout.fragment_about, container, false)
 
         return view1
     }
