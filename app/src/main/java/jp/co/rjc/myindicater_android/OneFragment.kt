@@ -1,26 +1,13 @@
-/**
- * Created by Parsania Hardik on 27-Jan-18.
- */
-import android.app.Activity
+package jp.co.rjc.myindicater_android
+
 import android.content.Context
-import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.view.*
 import android.widget.Toast
-import jp.co.rjc.myindicater_android.MapActivity
-import jp.co.rjc.myindicater_android.R
-import kotlinx.android.synthetic.*
 
-class OneFragment : Fragment(), View.OnClickListener {
+class oneFragment : Fragment(), View.OnClickListener {
 
     private var view1: View? = null
 

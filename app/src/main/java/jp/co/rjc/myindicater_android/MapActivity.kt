@@ -1,14 +1,8 @@
 package jp.co.rjc.myindicater_android
 
-import android.app.Activity
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
-import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
-import jp.co.rjc.myindicater_android.R
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
@@ -38,6 +32,9 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
         button2 = findViewById(R.id.about_button)
         button2?.setOnClickListener(this)
 
+        val manager = supportFragmentManager
+        val mapFragment = mapFragment()
+        manager.beginTransaction().replace(R.id.container, mapFragment).commit()
     }
 
     /* テスト用トースト */
@@ -47,31 +44,23 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    /* テスト用Fragment作成 */
-    private fun replaceFragment() {
-        val fragmentManager = getFragmentManager()
-        val transaction = fragmentManager.beginTransaction()
-        if (fragment1On) {
-            transaction.replace(R.id.fragment_map, Fragment())
-        } else {
-            transaction.replace(R.id.frgment_one, Fragment())
-        }
-        var fragment1On = !fragment1On
-        transaction.commit()
-    }
-
     override fun onClick(v: View?) {
 
         when (v?.id) {
             /* 目的地ボタン */
             R.id.goal_button -> {
                 ToastView.showToast(this, "goal_button")
-                replaceFragment()
+                val manager = supportFragmentManager
+                val mapFragment = mapFragment()
+                manager.beginTransaction().replace(R.id.container, mapFragment).commit()
             }
 
             /* about遷移ボタン */
             R.id.about_button -> {
                 ToastView.showToast(this, "about")
+                val manager = supportFragmentManager
+                val oneFragment = oneFragment()
+                manager.beginTransaction().replace(R.id.container, oneFragment).commit()
             }
             /* ボタン以外テスト用 */
             else -> {
