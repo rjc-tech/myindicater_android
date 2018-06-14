@@ -43,6 +43,8 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
     private var locationPriority:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("debug", "onCreate START")
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
@@ -62,6 +64,7 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
             locationRequest.setPriority(locationPriority)
             locationRequest.setInterval(5000)
             locationRequest.setFastestInterval(16)
+            Log.d("debug", "locationPriority" + priority[0])
         } else if (locationPriority === priority[1]) {
             // 消費電力を考慮する場合
             locationRequest.setPriority(locationPriority)
@@ -69,19 +72,25 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
             locationRequest.setInterval(60000)
             // ★★素早く位置情報を取得したいときのインターバル
             locationRequest.setFastestInterval(16)
+            Log.d("debug", "locationPriority" + priority[1])
         } else if (locationPriority === priority[2]) {
             // "city" level accuracy
             locationRequest.setPriority(locationPriority)
+            Log.d("debug", "locationPriority" + priority[2])
         } else {
             // 外部からのトリガーでの測位のみ
             locationRequest.setPriority(locationPriority)
+            Log.d("debug", "locationPriority ？？？")
         }
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         // ★★Googleが提供しているサービスに対して、接続するためのクライアント
-        mGoogleApiClient = GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build()
+        mGoogleApiClient =
+                GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build()
+
+        Log.d("debug", "onCreate END")
     }
 
     // locationのコールバックを受け取る
@@ -111,6 +120,7 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
     }
 
     override fun onMapReady(googleMap:GoogleMap) {
+        Log.d("debug", "onMapReady START")
         // check permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -129,11 +139,14 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
             Log.d("debug", "permission error")
             return
         }
+        Log.d("debug", "onMapReady END")
     }
 
     // ★★ LocationServices.FusedLocationApi.requestLocationUpdatesで位置情報が更新されたら呼ばれる
     override fun onLocationChanged(location: Location) {
+        Log.d("debug", "onLocationChanged START")
         if (onLocationChangedListener != null) {
+            Log.d("debug", "onLocationChanged Listener on")
             onLocationChangedListener.onLocationChanged(location)
 
             // 緯度経度取得
@@ -148,10 +161,12 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
             mMap.addMarker(MarkerOptions().position(newLocation).title("My Location"))
             mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation))
         }
+        Log.d("debug", "onLocationChanged END")
     }
 
     // ★★ GoogleApiClient の接続に成功した場合に呼ばれる
     override fun onConnected(bundle: Bundle?) {
+        Log.d("debug", "onConnected START")
         // check permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d("debug", "permission granted")
@@ -163,6 +178,7 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
             Log.d("debug", "permission error")
             return
         }
+        Log.d("debug", "onConnected END")
     }
 
     // ★★  GoogleApiClient の接続が中断された場合に呼ばれる
@@ -178,6 +194,7 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
     // ★★ 現在地ボタンがクリックされた場合に呼ばれる
     override fun onMyLocationButtonClick(): Boolean {
         Toast.makeText(this, "現在地ボタン押された！！！", Toast.LENGTH_SHORT).show()
+        Log.d("debug", "onMyLocationButtonClick END")
         return false
     }
 
