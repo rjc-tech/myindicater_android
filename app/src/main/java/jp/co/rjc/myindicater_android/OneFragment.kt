@@ -73,5 +73,4 @@ class OneFragment : Fragment(), View.OnClickListener {
 
         return super.onOptionsItemSelected(item)
     }
-
 }

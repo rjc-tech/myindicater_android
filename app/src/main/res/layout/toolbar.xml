@@ -10,21 +10,21 @@
     local:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="left"
+        android:gravity="right"
         android:orientation="horizontal" >
 
         <Button
-        android:id="@+id/goal_button"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="目的地" />
+            android:id="@+id/goal_button"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="目的地" />
 
         <Button
             android:id="@+id/about_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
             android:text="about" />
     </LinearLayout>
 

@@ -1,6 +1,7 @@
 package jp.co.rjc.myindicater_android
 
 import android.app.Activity
+import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcel
@@ -19,6 +20,7 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
     private var toolbar: Toolbar? = null
     private var button1: Button? = null
     private var button2: Button? = null
+    private val fragment1On = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,21 +49,24 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
 
     /* テスト用Fragment作成 */
     private fun replaceFragment() {
-        val transaction = supportFragmentManager.beginTransaction()
-        val mainFragment = mapFragment()
-        transaction.replace(R.id.frameID, mainFragment)
+        val fragmentManager = getFragmentManager()
+        val transaction = fragmentManager.beginTransaction()
+        if (fragment1On) {
+            transaction.replace(R.id.fragment_map, Fragment())
+        } else {
+            transaction.replace(R.id.frgment_one, Fragment())
+        }
+        var fragment1On = !fragment1On
         transaction.commit()
     }
 
     override fun onClick(v: View?) {
 
-        /* 地図Flagment作成 */
-        val fragmentManager = getFragmentManager()
-
         when (v?.id) {
             /* 目的地ボタン */
             R.id.goal_button -> {
                 ToastView.showToast(this, "goal_button")
+                replaceFragment()
             }
 
             /* about遷移ボタン */
