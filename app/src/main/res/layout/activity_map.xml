@@ -31,7 +31,7 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="目的地を入力" />
+            android:hint="目的地を入力" />
 
         <Button
             android:id="@+id/button3"

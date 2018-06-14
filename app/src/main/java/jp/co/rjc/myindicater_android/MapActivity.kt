@@ -27,6 +27,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
 
     val REQUEST_CODE = 1
 
+    private var mDestination : Place? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -47,13 +49,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
                 searchTask.execute(word)
 
                 // TODO
-                val mGoogleApiClient = GoogleApiClient.Builder(this)
-                        .addApi(Places.GEO_DATA_API)
-                        .addApi(Places.PLACE_DETECTION_API)
-                        .enableAutoManage(this, GoogleApiClient.OnConnectionFailedListener {
-                        } )
-                        .build()
-                mGoogleApiClient.connect()
+//                val mGoogleApiClient = GoogleApiClient.Builder(this)
+//                        .addApi(Places.GEO_DATA_API)
+//                        .addApi(Places.PLACE_DETECTION_API)
+//                        .enableAutoManage(this, GoogleApiClient.OnConnectionFailedListener {
+//                        } )
+//                        .build()
+//                mGoogleApiClient.connect()
             }
         })
 
@@ -61,22 +63,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-        // Add a marker in Sydney, Australia, and move the camera.
-        val sydney = LatLng(-34.0, 151.0)
-        mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-
-        // 東京駅
-        val tokyo = LatLng(35.681298, 139.7640529)
-        mMap!!.addMarker(MarkerOptions().position(tokyo).title("Marker in tokyo"))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(tokyo))
-
-        drawPolyline(sydney, tokyo)
-        findViewById<TextView>(R.id.distance).setText((calcDistance(sydney, tokyo)/1000).toString()+"km")
-
     }
 
+    /**
+     * 2座標間を直線で結びます.
+     */
     private fun drawPolyline(p0 : LatLng, p1 : LatLng){
         val options = PolylineOptions()
         options.add(p0)
@@ -87,6 +78,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
         mMap?.addPolyline(options)
     }
 
+    /**
+     * 2座標間の距離を求めます.
+     *
+     * return Float 2座標間の距離(m)
+     */
     private fun calcDistance(p0 : LatLng, p1 : LatLng) : Float{
         val distance = FloatArray(1)
         Location.distanceBetween(p0.latitude,p0.longitude,p1.latitude,p1.longitude,distance)
@@ -109,7 +105,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK){
-            val place = data!!.getParcelableExtra<Place>("place")
+            clearAllMarker()
+            mDestination = data!!.getParcelableExtra("place")
+            mDestination?.let { addMarker(it) }
+            mDestination?.let { moveMapToPlace(it) }
         }
     }
 
@@ -126,5 +125,19 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
         dismissProgress()
     }
 
+    private fun clearAllMarker(){
+        mMap?.clear()
+    }
+
+    private fun addMarker(place : Place){
+        val position = LatLng(place.latitude, place.longitude)
+        mMap?.addMarker(MarkerOptions().position(position).title(place.name))
+
+    }
+
+    private fun moveMapToPlace(place : Place){
+        val position = LatLng(place.latitude, place.longitude)
+        mMap?.moveCamera(CameraUpdateFactory.newLatLng(position))
+    }
 
 }

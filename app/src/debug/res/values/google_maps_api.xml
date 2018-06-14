@@ -20,11 +20,11 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBisg850iHlVD2SnEEqRC0zQDzWEV4j6L0</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBGJSjFV282Lo9cdstBQb9injg3u2f2k10</string>
 
     <!--TODO 要プレイス検索APIキー作成 -->
     <!--TODO https://developers.google.com/places/web-service/search?hl=ja -->
-    <string name="google_maps_place_search_key">TEST</string>
+    <string name="google_maps_place_search_key">AIzaSyAU-qxB_p8h8K76QUCiTHLr61MloornEcU</string>
 
 
 </resources>
