@@ -3,7 +3,6 @@ package jp.co.rjc.myindicater_android
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.LatLng
 import android.os.Bundle
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
@@ -11,6 +10,7 @@ import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.widget.Toast
 import android.location.LocationListener
+import android.os.Looper
 import android.support.v4.app.FragmentActivity
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.maps.*
@@ -19,6 +19,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 
 class MapsActivity : FragmentActivity(), OnMapReadyCallback,
 GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -27,22 +29,26 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
     // lateinit：初期化遅らせ　var：可変 val：固定
     private lateinit var mMap:GoogleMap
     private lateinit var mGoogleApiClient:GoogleApiClient
+    private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
     private lateinit var onLocationChangedListener: LocationSource.OnLocationChangedListener
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     // ★★PRIORITY_HIGH_ACCURACY           → 出来る限り高精度の位置情報を表示する。
     // ★★PRIORITY_NO_POWER                → 受動的(自分からはリクエストしない)
     // ★★PRIORITY_BALANCED_POWER_ACCURACY → ブロックレベルの精度で得たい場合
     // ★★PRIORITY_LOW_POWER               → 都市レベル (10km)
-    // kotlin用の配列に直すひつようあり
-    private val priority = {LocationRequest.PRIORITY_HIGH_ACCURACY; LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
-        LocationRequest.PRIORITY_LOW_POWER; LocationRequest.PRIORITY_NO_POWER}
+    private val priority = arrayListOf(LocationRequest.PRIORITY_HIGH_ACCURACY, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY,
+        LocationRequest.PRIORITY_LOW_POWER, LocationRequest.PRIORITY_NO_POWER)
     private var locationPriority:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+        fusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(this);
+        createLocationCallback()
         // LocationRequest を生成して精度、インターバルを設定
         // ★★参考URL:https://qiita.com/mattak/items/22be63f57b71287164bf
         // ★★位置情報取得用   プロパティによって精度や電力消費量などが変わるので、用途によって使い分けが必要
@@ -78,6 +84,15 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
         mGoogleApiClient = GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build()
     }
 
+    // locationのコールバックを受け取る
+    private fun createLocationCallback() {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                super.onLocationResult(locationResult)
+            }
+        }
+    }
+
     // onResumeフェーズに入ったら接続
     override fun onResume() {
         super.onResume()
@@ -87,7 +102,12 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
     // onPauseで切断
     public override fun onPause() {
         super.onPause()
-        mGoogleApiClient.disconnect()
+        stopLocationUpdates()
+       mGoogleApiClient.disconnect()
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onMapReady(googleMap:GoogleMap) {
@@ -114,7 +134,7 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
     // ★★ LocationServices.FusedLocationApi.requestLocationUpdatesで位置情報が更新されたら呼ばれる
     override fun onLocationChanged(location: Location) {
         if (onLocationChangedListener != null) {
-            onLocationChangedListener.onLocationChanged(location);
+            onLocationChangedListener.onLocationChanged(location)
 
             // 緯度経度取得
             val lat = location.getLatitude()
@@ -138,8 +158,7 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
 
             // FusedLocationApi
             // ★★ 位置情報更新・取得処理？→ 位置情報が更新されたら「LocationListener.onLocationChanged」が呼ばれる
-            // TODO FusedLocationProviderApiは非推奨なのでFusedLocationProviderClientを使用するよう修正が必要
-            FusedLocationProviderClient.requestLocationUpdates(mGoogleApiClient, locationRequest, this)
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
         } else {
             Log.d("debug", "permission error")
             return
@@ -148,12 +167,12 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
 
     // ★★  GoogleApiClient の接続が中断された場合に呼ばれる
     override fun onConnectionSuspended(i:Int){
-        Log.d("debug", "onConnectionSuspended");
+        Log.d("debug", "onConnectionSuspended")
     }
 
     // ★★   GoogleApiClient の接続に失敗した場合に呼ばれる
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        Log.d("debug", "onConnectionFailed");
+        Log.d("debug", "onConnectionFailed")
     }
 
     // ★★ 現在地ボタンがクリックされた場合に呼ばれる
@@ -168,6 +187,21 @@ LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
     }
 
     override fun deactivate() {
-        this.onLocationChangedListener = null
+        this.onLocationChangedListener.onLocationChanged(null)
+    }
+
+    // ★★ロケーションプロバイダが利用不可能になるとコールバックされるメソッド
+    override fun onProviderDisabled(provider: String) {
+        //ロケーションプロバイダーが使われなくなったらリムーブする必要がある
+    }
+
+    // ★★ロケーションプロバイダが利用可能になるとコールバックされるメソッド
+    override fun onProviderEnabled(provider: String) {
+        //プロバイダが利用可能になったら呼ばれる
+    }
+
+    // ★★ロケーションステータスが変わるとコールバックされるメソッド
+    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+        // 利用可能なプロバイダの利用状態が変化したときに呼ばれる
     }
 }
