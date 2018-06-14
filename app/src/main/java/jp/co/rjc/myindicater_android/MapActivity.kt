@@ -23,7 +23,6 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
         /* カスタマイズしたツールバーを作成 */
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "TEST"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         /* ボタンを設定 */
