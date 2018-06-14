@@ -36,19 +36,11 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
         manager.beginTransaction().replace(R.id.container, mapFragment).commit()
     }
 
-    /* テスト用トースト */
-    object ToastView {
-        fun showToast(context: Context, message: String) {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        }
-    }
-
     override fun onClick(v: View?) {
 
         when (v?.id) {
             /* 目的地ボタン */
             R.id.goal_button -> {
-                ToastView.showToast(this, "目的地ボタン")
                 val manager = supportFragmentManager
                 val mapFragment = mapFragment()
                 manager.beginTransaction().replace(R.id.container, mapFragment).commit()
@@ -56,14 +48,9 @@ class MapActivity : AppCompatActivity(), View.OnClickListener {
 
             /* about遷移ボタン */
             R.id.about_button -> {
-                ToastView.showToast(this, "aboutボタン")
                 val manager = supportFragmentManager
                 val aboutFragment = aboutFragment()
                 manager.beginTransaction().replace(R.id.container, aboutFragment).commit()
-            }
-            /* ボタン以外テスト用 */
-            else -> {
-                ToastView.showToast(this, "else")
             }
         }
     }

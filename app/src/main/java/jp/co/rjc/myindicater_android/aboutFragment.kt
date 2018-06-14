@@ -31,10 +31,8 @@ class aboutFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.goal_button -> {
-                MapActivity.ToastView.showToast(context, "goal_button")
             }
             else -> {
-                MapActivity.ToastView.showToast(context, "else")
             }
         }
     }
