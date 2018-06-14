@@ -1,0 +1,17 @@
+diff a/app/src/main/java/jp/co/rjc/myindicater_android/MapActivity.kt b/app/src/main/java/jp/co/rjc/myindicater_android/MapActivity.kt	(rejected hunks)
+@@ -48,15 +48,10 @@
+ 
+             /* about遷移ボタン */
+             R.id.about_button -> {
+-                ToastView.showToast(this, "aboutボタン")
+                 val manager = supportFragmentManager
+                 val aboutFragment = aboutFragment()
+                 manager.beginTransaction().replace(R.id.container, aboutFragment).commit()
+             }
+-            /* ボタン以外テスト用 */
+-            else -> {
+-                ToastView.showToast(this, "else")
+-            }
+         }
+     }
+ 
