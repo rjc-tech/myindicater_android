@@ -1,10 +1,17 @@
 package jp.co.rjc.myindicater_android
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.location.LocationManager.GPS_PROVIDER
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -13,8 +20,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -24,7 +29,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTask.SearchDestinationTaskListener {
+class MapActivity : AppCompatActivity(), OnMapReadyCallback,
+        SearchDestinationTask.SearchDestinationTaskListener,
+        LocationListener {
 
     private var mMap: GoogleMap? = null
     private var mProgress : ProgressDialogFragment? = null
@@ -43,6 +50,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
 
     private var mTextDistance: TextView? = null
 
+    private var mLocationManager: LocationManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -52,6 +61,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        mLocationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
 
         mLayoutSearch = findViewById<LinearLayout>(R.id.layout_search)
         mLayoutDistance = findViewById<LinearLayout>(R.id.layout_distance)
@@ -75,10 +86,40 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
             }
         })
 
+        val currentButton = findViewById<Button>(R.id.button_current)
+        currentButton.setOnClickListener({
+            mHere.let { moveMapToPlace(mHere!!) }
+        })
+
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onResume() {
+        mLocationManager?.requestLocationUpdates(GPS_PROVIDER,
+                0,0f,this)
+        super.onResume()
+
+    }
+
+    override fun onPause() {
+        mLocationManager?.removeUpdates(this)
+        super.onPause()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+
+        if (mMap == null) {
+            mMap = googleMap
+            //現在地表示ボタンはオリジナルのものを表示するのでfalse
+            mMap!!.uiSettings.isMyLocationButtonEnabled = false
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap?.isMyLocationEnabled = true
+        }
+
     }
 
     /**
@@ -132,9 +173,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
 
     private fun updateMap(){
         clearAllMarker()
-        mHere?.let {
-            addMarker(it)
-        }
 
         mDestination?.let {
             addMarker(it)
@@ -145,8 +183,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
             drawPolyline(LatLng(mHere!!.latitude, mHere!!.longitude),
                     LatLng(mDestination!!.latitude, mDestination!!.longitude))
 
+            // マップから取得できた距離(m)
             val distance = calcDistance(LatLng(mHere!!.latitude, mHere!!.longitude),
-                    LatLng(mDestination!!.latitude, mDestination!!.longitude))
+                    LatLng(mDestination!!.latitude, mDestination!!.longitude))/1000
 
             mTextDistance?.text = distance.toString() + "km"
             mLayoutDistance?.visibility = View.VISIBLE
@@ -205,5 +244,25 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
         }
         return false
     }
+
+    override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
+    }
+
+    override fun onLocationChanged(p0: Location?) {
+        mHere = Place()
+        mHere?.latitude = p0?.latitude!!
+        mHere?.longitude = p0?.longitude!!
+
+        moveMapToPlace(mHere!!)
+        updateMap()
+
+    }
+
+    override fun onProviderDisabled(p0: String?) {
+    }
+
+    override fun onProviderEnabled(p0: String?) {
+    }
+
 
 }
