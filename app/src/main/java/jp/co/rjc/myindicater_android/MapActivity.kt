@@ -16,10 +16,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -207,6 +204,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     override fun onFailed() {
         dismissProgress()
+        Toast.makeText(this, getString(R.string.failed_get_location), Toast.LENGTH_SHORT).show()
     }
 
     private fun clearAllMarker(){
