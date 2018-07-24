@@ -30,6 +30,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         SearchDestinationTask.SearchDestinationTaskListener,
         LocationListener {
 
+    private val ARRIVAL_DISTANCE = 50
+    private var mIsShowArrivalToast: Boolean = false
+
     private var mMap: GoogleMap? = null
     private var mProgress : ProgressDialogFragment? = null
 
@@ -160,6 +163,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK){
             clearAllMarker()
+            mIsShowArrivalToast = false
             mDestination = data!!.getParcelableExtra("place")
             updateMap()
             mDestination?.let {
@@ -182,10 +186,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
             // マップから取得できた距離(m)
             val distance = calcDistance(LatLng(mHere!!.latitude, mHere!!.longitude),
-                    LatLng(mDestination!!.latitude, mDestination!!.longitude))/1000
+                    LatLng(mDestination!!.latitude, mDestination!!.longitude))
 
-            mTextDistance?.text = distance.toString() + "km"
+            mTextDistance?.text = (distance/1000).toString() + "km"
             mLayoutDistance?.visibility = View.VISIBLE
+
+            if (distance < ARRIVAL_DISTANCE && !mIsShowArrivalToast) {
+                mIsShowArrivalToast = true
+                Toast.makeText(this, "目的地付近に到着しました", Toast.LENGTH_LONG).show()
+            }
 
         } else {
             mLayoutDistance?.visibility = View.GONE
@@ -231,8 +240,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-        // このアプリについての処理
-//            R.id.action_about ->
             R.id.action_search ->
                 when (mLayoutSearch?.visibility) {
                     View.VISIBLE -> mLayoutSearch?.visibility = View.GONE
