@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            tools:context="jp.co.rjc.myindicater_android.MapActivity" />
+            tools:context="jp.co.rjc.myindicater_android.MapActivity"
+            map:cameraZoom="15"/>
 
         <LinearLayout
             android:id="@+id/layout_distance"
