@@ -6,8 +6,12 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.places.Places
@@ -33,18 +37,34 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
     // 現在地のPlace
     private var mHere : Place? = null
 
+    private var mLayoutSearch: View? = null
+
+    private var mLayoutDistance: View? = null
+
+    private var mTextDistance: TextView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+
+        setSupportActionBar(findViewById(R.id.toolbar))
+
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        mLayoutSearch = findViewById<LinearLayout>(R.id.layout_search)
+        mLayoutDistance = findViewById<LinearLayout>(R.id.layout_distance)
+        mTextDistance = findViewById(R.id.distance)
 
         val searchText = findViewById<EditText>(R.id.editText)
         val searchButton = findViewById<Button>(R.id.button3)
         searchButton.setOnClickListener({
             val word = searchText.text.toString()
             if(!word.isNullOrEmpty()){
+
+                // 検索開始時は不要なのでトルツメ
+                mLayoutSearch?.visibility = View.GONE
 
                 showProgress()
 
@@ -125,7 +145,14 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
             drawPolyline(LatLng(mHere!!.latitude, mHere!!.longitude),
                     LatLng(mDestination!!.latitude, mDestination!!.longitude))
 
+            val distance = calcDistance(LatLng(mHere!!.latitude, mHere!!.longitude),
+                    LatLng(mDestination!!.latitude, mDestination!!.longitude))
 
+            mTextDistance?.text = distance.toString() + "km"
+            mLayoutDistance?.visibility = View.VISIBLE
+
+        } else {
+            mLayoutDistance?.visibility = View.GONE
         }
 
     }
@@ -156,6 +183,27 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,SearchDestinationTas
     private fun moveMapToPlace(place : Place){
         val position = LatLng(place.latitude, place.longitude)
         mMap?.moveCamera(CameraUpdateFactory.newLatLng(position))
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+        // このアプリについての処理
+//            R.id.action_about ->
+            R.id.action_search ->
+                when (mLayoutSearch?.visibility) {
+                    View.VISIBLE -> mLayoutSearch?.visibility = View.GONE
+                    else -> mLayoutSearch?.visibility = View.VISIBLE
+                }
+
+        }
+        return false
     }
 
 }
