@@ -52,6 +52,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private var mLocationManager: LocationManager? = null
 
+    private var mButtonMapType: Button? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -87,12 +89,30 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         })
 
         val currentButton = findViewById<Button>(R.id.button_current)
+        currentButton!!.isEnabled = false
         currentButton.setOnClickListener({
             mHere.let { moveMapToPlace(mHere!!) }
         })
 
-    }
+        mButtonMapType = findViewById<Button>(R.id.button_map_type)
+        mButtonMapType!!.isEnabled = false
+        mButtonMapType!!.setOnClickListener({
+            mButtonMapType.let {
+                when (mMap?.mapType) {
+                    GoogleMap.MAP_TYPE_NORMAL -> {
+                        mMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                        mButtonMapType?.setText("地図")
+                    }
+                    GoogleMap.MAP_TYPE_SATELLITE -> {
+                        mMap?.mapType = GoogleMap.MAP_TYPE_NORMAL
+                        mButtonMapType?.setText("航空写真")
+                    }
+                    else ->{}
+                }
+            }
+        })
 
+    }
     @SuppressLint("MissingPermission")
     override fun onResume() {
         mLocationManager?.requestLocationUpdates(GPS_PROVIDER,
@@ -112,6 +132,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             mMap = googleMap
             //現在地表示ボタンはオリジナルのものを表示するのでfalse
             mMap!!.uiSettings.isMyLocationButtonEnabled = false
+            mMap!!.uiSettings.isZoomControlsEnabled= true
+
+            mButtonMapType!!.isEnabled = true
+            findViewById<Button>(R.id.button_current)!!.isEnabled = true
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED
