@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 
 import android.util.Log
+import android.widget.TextView
 import com.google.android.gms.maps.GoogleMap
 
 /**
@@ -19,10 +20,7 @@ class ProgressDialogFragment : DialogFragment(){
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val rootView = activity.layoutInflater.inflate(R.layout.dialog_progress, null)
         val builder = AlertDialog.Builder(activity)
-        builder.setCancelable(false)
-                .setView(rootView)
-                .setMessage("検索中...")
-
+        builder.setCancelable(false).setView(rootView)
         return builder.create()
     }
 }

@@ -8,6 +8,7 @@ import android.util.Log
 import com.google.android.gms.maps.GoogleMap
 import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URI
 import java.net.URL
@@ -40,7 +41,12 @@ class SearchDestinationTask(context: Context) : AsyncTask<String, Void, String>(
                 .appendQueryParameter("key", mContext.getString(R.string.google_maps_place_search_key))
 
         val urlConnection = URL(uri.toString()).openConnection()
-        urlConnection.connect()
+        try {
+            urlConnection.connect()
+        } catch (e : IOException) {
+            // 取得に失敗した場合
+            return ""
+        }
 
         val reader = BufferedReader(InputStreamReader(urlConnection.getInputStream()))
         var response = ""
