@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="20dp"
             android:background="@android:color/white"
             android:orientation="horizontal"
             android:paddingLeft="5dp"
@@ -62,14 +61,14 @@
             android:id="@+id/layout_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_distance"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:background="@android:color/white"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <EditText
                 android:id="@+id/editText"

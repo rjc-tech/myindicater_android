@@ -22,8 +22,6 @@
     -->
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBGJSjFV282Lo9cdstBQb9injg3u2f2k10</string>
 
-    <!--TODO 要プレイス検索APIキー作成 -->
-    <!--TODO https://developers.google.com/places/web-service/search?hl=ja -->
     <string name="google_maps_place_search_key">AIzaSyAU-qxB_p8h8K76QUCiTHLr61MloornEcU</string>
 
 
