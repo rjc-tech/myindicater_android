@@ -36,9 +36,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         SearchDestinationTask.SearchDestinationTaskListener,
         LocationListener {
 
+    // デフォルト現在地(初回起動時GPS無効時用)
+    private val DEFAULT_LONGITUDE = 139.767052f
+    private val DEFAULT_LATITUDE = 35.681167f
+
     private val ARRIVAL_DISTANCE = 50
     private val KILO_METER_VALUE = 1000
     private val KILO_METER_UNIT = "km"
+    private val KEY_CURRENT_LATITUDE = "key_current_latitude"
+    private val KEY_CURRENT_LONGITUDE = "key_current_longitude"
     private val KEY_DESTINATION_NAME = "key_destination_name"
     private val KEY_DESTINATION_LATITUDE = "key_destination_latitude"
     private val KEY_DESTINATION_LONGITUDE = "key_destination_longitude"
@@ -116,6 +122,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         currentButton.setOnClickListener({
             if(checkGps()){
                 mHere.let { moveMapToPlace(mHere!!) }
+            } else {
+                Toast.makeText(this, "GPS機能をONに設定してください",Toast.LENGTH_LONG).show()
             }
         })
 
@@ -143,23 +151,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     @SuppressLint("MissingPermission")
     override fun onResume() {
-        if(checkGps()){
-            if (checkPermission()) {
-                mLocationManager?.requestLocationUpdates(GPS_PROVIDER,
-                        0, 0f, this)
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_PERMISSION)
-            }
-        } else {
-            // GPSをONにさせる
-            Toast.makeText(this, "GPS機能をONに設定してください",Toast.LENGTH_LONG).show()
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+        if (checkPermission()) {
+            mLocationManager?.requestLocationUpdates(GPS_PROVIDER,
+                    0, 0f, this)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_PERMISSION)
         }
-
         super.onResume()
-
     }
 
     override fun onPause() {
@@ -198,6 +198,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             mMap?.isMyLocationEnabled = true
         }
 
+        // GPSオフかつ現在地未設定の場合は前回の現在地を設定する。
+        if(!checkGps() && mHere == null){
+            Toast.makeText(this, "GPS機能をONに設定してください",Toast.LENGTH_LONG).show()
+            mHere = loadCurrentCoordinate()
+            moveMapToPlace(mHere!!)
+        }
     }
 
     /**
@@ -378,6 +384,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             moveMapToPlace(mHere!!)
             mIsFirstLocationChanged = false
         }
+        saveCurrentCoordinate(mHere!!)
 
         updateMap()
 
@@ -398,4 +405,18 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         return networkInfo != null && networkInfo.isConnectedOrConnecting
     }
 
+    private fun saveCurrentCoordinate(place : Place){
+        val editor = PreferenceManager.getDefaultSharedPreferences(applicationContext).edit()
+        editor.putFloat(KEY_CURRENT_LATITUDE, place.latitude.toFloat())
+        editor.putFloat(KEY_CURRENT_LONGITUDE, place.longitude.toFloat())
+        editor.apply()
+    }
+
+    private fun loadCurrentCoordinate(): Place {
+        val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val place = Place()
+        place.longitude = pref.getFloat(KEY_CURRENT_LONGITUDE, DEFAULT_LONGITUDE).toDouble()
+        place.latitude = pref.getFloat(KEY_CURRENT_LATITUDE, DEFAULT_LATITUDE).toDouble()
+        return place
+    }
 }

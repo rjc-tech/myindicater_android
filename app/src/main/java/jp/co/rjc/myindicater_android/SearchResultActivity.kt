@@ -36,7 +36,6 @@ class SearchResultActivity : ListActivity() {
     }
 
     private fun saveDestinationCoordinate(place : Place){
-        // 余裕があったらJSONで保存
         val editor = PreferenceManager.getDefaultSharedPreferences(applicationContext).edit()
         editor.putString(KEY_DESTINATION_NAME, place.name)
         editor.putFloat(KEY_DESTINATION_LATITUDE, place.latitude.toFloat())
