@@ -191,6 +191,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             mMap!!.uiSettings.isMyLocationButtonEnabled = false
             mMap!!.uiSettings.isZoomControlsEnabled = true
 
+            // StackOverflow対策のため建物内表示をOFF
+            mMap!!.isIndoorEnabled = false
+
             mButtonMapType!!.isEnabled = true
             findViewById<Button>(R.id.button_current)!!.isEnabled = true
         }
