@@ -68,6 +68,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private var mButtonMapType: Button? = null
 
+    private var mIsFirstLocationChanged : Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -219,8 +221,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     private fun calcDistance(p0: LatLng, p1: LatLng): Float {
         val distance = FloatArray(1)
         Location.distanceBetween(p0.latitude, p0.longitude, p1.latitude, p1.longitude, distance)
-
-        return distance[0]
+        // 1の位を四捨五入
+        return Math.round(distance[0]/10)*10.toFloat()
     }
 
     private fun showProgress() {
@@ -371,7 +373,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         mHere?.latitude = p0?.latitude!!
         mHere?.longitude = p0?.longitude!!
 
-        moveMapToPlace(mHere!!)
+        // 初回のみ現在地にマップ移動する
+        if (mIsFirstLocationChanged) {
+            moveMapToPlace(mHere!!)
+            mIsFirstLocationChanged = false
+        }
+
         updateMap()
 
     }
