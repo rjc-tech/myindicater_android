@@ -68,6 +68,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private var mButtonMapType: Button? = null
 
+    private var mIsFirstLocationChanged : Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -371,7 +373,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         mHere?.latitude = p0?.latitude!!
         mHere?.longitude = p0?.longitude!!
 
-        moveMapToPlace(mHere!!)
+        // 初回のみ現在地にマップ移動する
+        if (mIsFirstLocationChanged) {
+            moveMapToPlace(mHere!!)
+            mIsFirstLocationChanged = false
+        }
+
         updateMap()
 
     }
