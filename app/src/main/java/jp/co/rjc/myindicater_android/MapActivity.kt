@@ -219,8 +219,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     private fun calcDistance(p0: LatLng, p1: LatLng): Float {
         val distance = FloatArray(1)
         Location.distanceBetween(p0.latitude, p0.longitude, p1.latitude, p1.longitude, distance)
-
-        return distance[0]
+        // 1の位を四捨五入
+        return Math.round(distance[0]/10)*10.toFloat()
     }
 
     private fun showProgress() {
